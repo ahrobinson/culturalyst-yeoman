@@ -3,9 +3,9 @@
 angular.module('culturalystApp')
   .factory('Artist', ['$http',function ($http) {
     return function(id){
-      $http({
+      return $http({
         method: 'GET',
-        url: '/artist/' + id
+        url: 'api/user/artist/' + id
       });
     };
   }]);
