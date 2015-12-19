@@ -1,11 +1,16 @@
 'use strict';
 
 angular.module('culturalystApp')
-.controller('DiscoveryCtrl', function($scope, cultFire, $firebaseArray, MediaList){
-  $scope.mediaList = MediaList.getMediaList();
-  console.log('hi')
+.controller('DiscoveryCtrl', function($scope, cultFire, $firebaseArray, $firebaseObject, MediaList){
+  $scope.mediaList = $firebaseArray(cultFire.child('mediums'));
+  console.log($scope.mediaList)
   $scope.artists = $firebaseArray(cultFire.child('Users'));
-  console.log($scope.artists)
+  $scope.getArtists = function(medium) {
+    $firebaseArray(cultFire.child('mediums').child(medium.$id)).forEach(function(obj){
+      $scope.artists.$add($firebaseObject(cultFire.child('Users').child(obj.$id)))
+    })
+
+  }
 
 })
 
@@ -27,46 +32,41 @@ angular.module('culturalystApp')
   //   }
   //
   //
-  //   $scope.featured = [{
-  //       name: 'Sam Bowler',
-  //       medium: 'Sculpture',
-  //       img:'cover_photo_1.png'
-  //     }, {
-  //       name: 'Mykia Smith',
-  //       medium: 'Writing',
-  //       img:'cover_photo_2.png'
-  //     },{
-  //       name: 'Just Some Dude',
-  //       medium: 'Musician',
-  //       img:'cover_photo_3.png'
-  //     },{
-  //       name: 'Victor York-Carter',
-  //       medium: 'Musician',
-  //       img:'cover_photo_4.png'
-  //     },{
-  //       name: 'Just Some Dude',
-  //       medium: 'Musician',
-  //       img:'cover_photo_5.png'
-  //     }, {
-  //       name: 'Victor York-Carter',
-  //       medium: 'Musician',
-  //       img:'cover_photo_6.png'
-  //     },{
-  //       name: 'Just Some Dude',
-  //       medium: 'Musician',
-  //       img:'cover_photo_1.png'
-  //     },{
-  //       name: 'Victor York-Carter',
-  //       medium: 'Musician',
-  //       img:'cover_photo_2.png'
-  //     },{
-  //       name: 'Just Some Dude',
-  //       medium: 'Musician',
-  //       img:'cover_photo_3.png'
-  //     }];
+    // $scope.featured = [{
+    //     name: 'Sam Bowler',
+    //     medium: 'Sculpture',
+    //     img:'cover_photo_1.png'
+    //   }, {
+    //     name: 'Mykia Smith',
+    //     medium: 'Writing',
+    //     img:'cover_photo_2.png'
+    //   },{
+    //     name: 'Just Some Dude',
+    //     medium: 'Musician',
+    //     img:'cover_photo_3.png'
+    //   },{
+    //     name: 'Victor York-Carter',
+    //     medium: 'Musician',
+    //     img:'cover_photo_4.png'
+    //   },{
+    //     name: 'Just Some Dude',
+    //     medium: 'Musician',
+    //     img:'cover_photo_5.png'
+    //   }, {
+    //     name: 'Victor York-Carter',
+    //     medium: 'Musician',
+    //     img:'cover_photo_6.png'
+    //   },{
+    //     name: 'Just Some Dude',
+    //     medium: 'Musician',
+    //     img:'cover_photo_1.png'
+    //   },{
+    //     name: 'Victor York-Carter',
+    //     medium: 'Musician',
+    //     img:'cover_photo_2.png'
+    //   },{
+    //     name: 'Just Some Dude',
+    //     medium: 'Musician',
+    //     img:'cover_photo_3.png'
+    //   }];
   // })
-  .controller('SearcherCtrl', function ($scope) {
-    $scope.currentSel = function() {
-      console.log($scope.selectedMedium);
-    }
-  });
