@@ -8,27 +8,20 @@ angular.module('culturalystApp')
       console.log(res);
       $scope.artist = res.data;
     })
-    
+
   });
 
-
-    // $firebaseObject(cultFire.child('Users').child('/' + artistId))
-    //   .$loaded()
-    //   .then(function(data){
-    //   $scope.artist = data
-    //   console.log($scope.artist)
-    // })
-
-    // $scope.posts = $firebaseArray(cultFire.child('posts').child('/' + artistId))
+    $scope.posts = $firebaseArray(cultFire.child('posts').child('/' + artistId).limitToLast(5))
 
     // console.log($scope.postsy)
-    // $scope.addPost = function(message) {
-    //   console.log($scope.posts)
-    //   // console.log($scope.postsId)
-    //   $scope.posts.$add({
-    //     name: $scope.artist.name,
-    //     text: message,
-    //     created: Firebase.ServerValue.TIMESTAMP,
-    //     id: artistId
-    //   });
-    // };
+    $scope.addPost = function(message) {
+      console.log($scope.posts)
+      // console.log($scope.postsId)
+      $scope.posts.$add({
+        name: $scope.artist.name,
+        text: message,
+        created: Firebase.ServerValue.TIMESTAMP,
+        id: artistId
+      });
+      $scope.post = '';
+    };
