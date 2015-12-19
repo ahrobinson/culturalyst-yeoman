@@ -14,7 +14,7 @@ angular.module('culturalystApp')
       })
     };
 
-    $scope.posts = $firebaseArray(cultFire.child('posts').child('/' + artistId))
+    $scope.posts = $firebaseArray(cultFire.child('posts').child('/' + artistId).limitToLast(5))
 
     // console.log($scope.postsy)
     $scope.addPost = function(message) {
@@ -26,6 +26,7 @@ angular.module('culturalystApp')
         created: Firebase.ServerValue.TIMESTAMP,
         id: artistId
       });
+      $scope.post = '';
     };
 
 
