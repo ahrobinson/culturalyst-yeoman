@@ -6,6 +6,9 @@
 
 import errors from './components/errors';
 import path from 'path';
+import db from './sqldb'
+import auth from './auth/auth.service'
+var stripe = require('stripe')('sk_test_iJGQtNCDSmOSroJKVAlFCdbB')
 
 var CLIENT_ID = 'ca_7Yac6i1E5MoE5YvDGx9tNYRrBq1tKddQ';
 var API_KEY = 'sk_test_iJGQtNCDSmOSroJKVAlFCdbB';
@@ -23,40 +26,33 @@ module.exports = function(app) {
   app.use('/api/rewards', require('./api/reward'));
   app.use('/api/media', require('./api/media'));
   app.use('/api/users', require('./api/user'));
-  app.get('/authorize', function(req,res){
-    console.log('yay!!!')
-    res.redirect(AUTHORIZE_URI + '?' + qs.stringify({
-      response_type: 'code',
-      scope: 'read_write',
-      client_id: CLIENT_ID
-    }));
-  })
-
-  app.get('/oauth/callback', function(req, res) {
-
-    var code = req.query.code;
-    console.log('code: ', code)
-    // Make /oauth/token endpoint POST request
-    request.post({
-      url: TOKEN_URI,
-      form: {
-        grant_type: 'authorization_code',
-        client_id: CLIENT_ID,
-        code: code,
-        client_secret: API_KEY
-      }
-    }, function(err, r, body) {
-      if(err){console.log('err: ', err)}
-      var accessToken = JSON.parse(body).access_token;
-      console.log('access: ', accessToken)
-      // Do something with your accessToken
-
-      // For demo's sake, output in response:
-      res.send({ 'Your Token': accessToken });
-
-    });
-  });
   app.use('/auth', require('./auth'));
+
+  app.post('/register', auth.isAuthenticated(), function(req,res){
+    console.log('access: ',req.query)
+    var userId = req.body._id
+    var data = req.body.data
+    stripe.accounts.create(data, function(err,acct){
+      if(err){
+        console.log('err!!! ', err)
+      } else {
+        console.log('acct: ', acct)
+        db.User.find({
+            where: {
+              _id: userId
+            }
+          })
+          .then(function(user) {
+            if(user){
+              console.log('user: ', user)
+            } else {
+              console.log('no user found bruh')
+            }
+          });
+      }
+
+    })
+  })
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')
