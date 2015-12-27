@@ -32,6 +32,7 @@ module.exports = function(app) {
     console.log('access: ',req.query)
     var userId = req.body._id
     var data = req.body.data
+    //create stripe acct for artists
     stripe.accounts.create(data, function(err,acct){
       if(err){
         console.log('err!!! ', err)
@@ -45,13 +46,82 @@ module.exports = function(app) {
           .then(function(user) {
             if(user){
               console.log('user: ', user)
+              //add stripe acct info to db
+              console.log('acct:', user.dataValues.account);
+              console.log('acct:', user.account)
+              // user.dataValues.account = JSON.stringify(acct);
+              console.log('newacct:', user.dataValues.account);
+              req.method = 'get'
+              return res.redirect('/')
             } else {
               console.log('no user found bruh')
             }
           });
+
+
       }
 
     })
+  })
+
+  app.post('/charge', function(req, res){
+    var amount = req.body.amount
+    var artistId = req.body._id
+    //for subscriptions
+    var recurring = req.body.recurring
+    //find Artist by ID
+
+    db.User.find({
+        where: {
+          _id: artistId
+        }
+      })
+      .then(function(user) {
+        console.log('user: ', user)
+        console.log('useracct: ', JSON.parse(user.dataValues.account))
+        if(user){
+          //if custID
+          if(req.body.customer){
+            //create charge
+            stripe.charges.create({
+              amount: amount,
+              currency: 'usd',
+              customer: customer
+            }, function(err, charge){
+                //store charge to db for user/artist dashboard
+            })
+          } else {
+            //create cutomer from card token
+            return stripe.customers.create({
+              source: req.body.token
+            }, function(err, customer){
+              if(err){
+                console.log('err: ', err)
+              }
+              console.log('customer: ',customer)
+              //create charge from cust id
+              return stripe.charges.create({
+                amount: amount,
+                currency: 'usd',
+                customer: customer.id,
+                destination: JSON.parse(user.dataValues.account).id,
+                application_fee: 500
+              }, function(err, charge){
+                if(err){
+                  console.log('err: ', err)
+                }
+                console.log('charges: ', charge)
+                //save charge to db for user/artist dashboard
+              })
+            })
+          }
+        } else {
+          console.log('no user found bruh')
+
+        }
+      });
+      req.method = 'get'
+      res.redirect('/')
   })
 
   // All undefined asset or api routes should return a 404

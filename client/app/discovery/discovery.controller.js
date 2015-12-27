@@ -1,10 +1,9 @@
 'use strict';
 
 angular.module('culturalystApp')
-.controller('DiscoveryCtrl', function($scope, cultFire, $firebaseArray, MediaList, $http){
+.controller('DiscoveryCtrl', function($scope, MediaList, $http){
   $scope.mediaList = MediaList.getMediaList();
   console.log('hi')
-  //$scope.artists = $firebaseArray(cultFire.child('Users'));
   console.log($scope.artists)
 
 
