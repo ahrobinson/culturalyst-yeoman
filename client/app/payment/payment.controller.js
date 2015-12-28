@@ -15,7 +15,7 @@ angular.module('culturalystApp')
         console.log('tok: ',tok)
         $http({
           method: 'POST',
-          url: '/charge',
+          url: 'api/users/charge',
           data: {
             token: tok.id,
             amount: $scope.amount,
@@ -27,25 +27,3 @@ angular.module('culturalystApp')
     }
 
   });
-
-
-  //http request for customer id
-  // $http({
-  //   method: 'GET',
-  //   url: '/api/users/me'
-  // }).then(function(res){
-  //   console.log('res: ', res)
-  //
-  //   //if customer id
-  //   if(res.data.custid){
-  //     $http({
-  //       //send cust id to /charge
-  //       method: 'POST',
-  //       url: '/charge',
-  //       data: {
-  //         customer: res.custid,
-  //         amount: $scope.amount,
-  //         recurring: $scope.recurring
-  //       }
-  //     })
-  //   } else {}

@@ -23,8 +23,8 @@ angular.module('culturalystApp')
           console.log('banking: ',acct)
           //send data to server
           $http({
-            method: 'POST',
-            url: '/register',
+            method: 'PUT',
+            url: 'api/users/register',
             data: {
               data: {
                 managed: true,
