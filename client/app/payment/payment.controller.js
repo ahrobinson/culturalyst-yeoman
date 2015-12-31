@@ -5,14 +5,26 @@ angular.module('culturalystApp')
     var artistId = $location.path().split('/').pop();
     $scope.form = {};
     $scope.recurring = false;
+
+    //GET ARTIST INFO
+    $http({
+      method: 'GET',
+      url: '/api/users/' + artistId
+    }).then(function(data){
+      console.log(data)
+      $scope.artist = data.data
+    })
+
+    $scope.artist = {}
     // Payment
     var sendToken = function(token, args){
+      console.log('args: ',args)
       $http({
         method: 'POST',
         url: 'api/users/charge',
         data: {
           token: token.id,
-          amount: $scope.amount * 100,
+          amount: $scope.amountToPay * 100,
           recurring: $scope.recurring,
           _id: artistId
         }
@@ -30,9 +42,10 @@ angular.module('culturalystApp')
 
     });
 
-    $scope.submit = function(){
+    $scope.submit = function(amount){
+      $scope.amountToPay = amount;
       checkout.open({
-        amount: $scope.amount * 100
+        amount: amount * 100
       })
     }
     // Rewards
@@ -45,4 +58,19 @@ angular.module('culturalystApp')
         $scope.rewards = data;
       })
     }
+
+    //MOCK REWARD DATA
+    $scope.rewards = [
+      {
+        amount: 30,
+        title: 'Help A Brotha Out',
+        description: 'You will really be helping a brotha out with this one.'
+      },
+      {
+        amount: 50,
+        title: 'Help A Brotha Out',
+        description: 'You will really be helping a brotha out with this one.'
+      }
+    ]
+
   });
