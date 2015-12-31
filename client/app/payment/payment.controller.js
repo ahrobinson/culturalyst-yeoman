@@ -3,6 +3,9 @@
 angular.module('culturalystApp')
   .controller('PaymentCtrl', function ($scope, $location, stripe, $http) {
     $scope.artistId = $location.path().split('/').pop();
+    if(!$scope.artistId){
+      $location.path('/')
+    }
     $scope.form = {};
     $scope.recurring = false;
 
@@ -13,6 +16,9 @@ angular.module('culturalystApp')
     }).then(function(data){
       console.log(data)
       $scope.artist = data.data
+    }, function(res){
+      console.log(res)
+      $location.path('/')
     })
 
     $scope.artist = {}
@@ -56,4 +62,16 @@ angular.module('culturalystApp')
     };
     $scope.getRewards();
     //MOCK REWARD DATA
+    $scope.rewards = [
+      {
+        amount: 30,
+        title: 'Help A Brotha Out',
+        description: 'You will really be helping a brotha out with this one.'
+      },
+      {
+        amount: 50,
+        title: 'Help A Brotha Out',
+        description: 'You will really be helping a brotha out with this one.'
+      }
+    ]
   });

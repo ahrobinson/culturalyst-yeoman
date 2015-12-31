@@ -22,8 +22,8 @@
 }
 
 .profile img {
-    width: 90px;
-  height: 90px;
+    width: 110px;
+  height: 110px;
   border-radius: 50%;
     border-right: 25px;
     top: 1.25em;
@@ -52,8 +52,8 @@
     margin: 0 auto;
     text-align: center;
     position: relative;
-    top:-12%;
-    font-size: 1.1em;
+    /*top:-8%;*/
+    font-size: 2.1em;
 }
 
 
@@ -74,7 +74,7 @@
     position: relative;
     width: 65%;
     top: -1.5em;
-    text-align: left;
+    text-align: center;
     display: block;
     margin: 0 auto;
     font-size: .9em;
@@ -126,10 +126,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1af0f9ff', e
     text-align: center;
 }
 
-a.btn {
+/*a.btn {
         color: #fffffa;
         text-decoration: none;
-}
+}*/
 
 a.btn:hover {
     text-decoration: none;

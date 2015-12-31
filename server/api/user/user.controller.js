@@ -417,24 +417,24 @@ exports.subscribe= function(req,res){
 }
 
 //One time charge to customer
-// exports.chargedb = function(charge,id){
-//   console.log('calling me')
-//   User.find({
-//       where: {
-//         _id: id
-//       }
-//     })
-//     .then(function(user) {
-//         console.log('supps: ',user.supporters)
-//         user.supporters = 1;
-//         user.save()
-//           .then(function() {
-//             console.log('done!')
-//             res.status(204).end();
-//           })
-//           .catch(validationError(res));
-//     });
-// }
+exports.chargedb = function(charge,id){
+  console.log('calling me')
+  User.find({
+      where: {
+        _id: id
+      }
+    })
+    .then(function(user) {
+        console.log('supps: ',user.supporters)
+        user.supporters = 1;
+        user.save()
+          .then(function() {
+            console.log('done!')
+            res.status(204).end();
+          })
+          .catch(validationError(res));
+    });
+}
 
 exports.charge = function(req,res){
   var amount = req.body.amount
@@ -484,7 +484,7 @@ exports.charge = function(req,res){
               console.log('charges: ', charge)
               //save charge to db for user/artist dashboard
               res.status(204).end()
-              // exports.chargedb(charge,artistId);
+              exports.chargedb(charge,artistId);
             }).catch(handleError(res))
 
           })
