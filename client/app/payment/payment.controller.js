@@ -18,6 +18,7 @@ angular.module('culturalystApp')
     $scope.artist = {}
     // Payment
     var sendToken = function(token, args){
+      console.log('args: ',args)
       $http({
         method: 'POST',
         url: 'api/users/charge',
@@ -42,6 +43,7 @@ angular.module('culturalystApp')
     });
 
     $scope.submit = function(amount){
+      $scope.amount = amount;
       checkout.open({
         amount: amount * 100
       })

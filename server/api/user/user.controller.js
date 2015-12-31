@@ -321,7 +321,7 @@ exports.registerdb = function(account, id){
     })
     .then(function(user) {
         user.account = JSON.stringify(account)
-        return user.save()
+        user.save()
           .then(function() {
             res.status(204).end();
           })
@@ -374,12 +374,12 @@ exports.subscribe= function(req,res){
           }).catch(handleError(res))
         } else {
           //create cutomer from card token
-          return stripe.customers.create({
+          stripe.customers.create({
             source: req.body.token
           }).then(function(customer){
             console.log('customer: ',customer)
             //create charge from cust id
-            return stripe.customers.createSubscription(customer,
+            stripe.customers.createSubscription(customer,
               {
                 plan: 'user' + artistID + 'plan' + amount/100,
                 application_fee_percent: 10.4 + feePercent
@@ -410,7 +410,7 @@ exports.addCharge = function(charge,id){
       } else {
         user.supporters += 1
       }
-      return user.save()
+      user.save()
         .then(function() {
           res.status(204).end();
         })
@@ -419,6 +419,7 @@ exports.addCharge = function(charge,id){
 }
 //One time charge to customer
 exports.charge = function(req,res){
+  console.log('dabody: ', req.body)
   var amount = req.body.amount
   var artistId = req.body._id
   //for subscriptions
@@ -452,12 +453,12 @@ exports.charge = function(req,res){
           }).catch(handleError(res))
         } else {
           //create cutomer from card token
-          return stripe.customers.create({
+          stripe.customers.create({
             source: req.body.token
           }).then(function(customer){
             console.log('customer: ',customer)
             //create charge from cust id
-            return stripe.charges.create({
+            stripe.charges.create({
               amount: amount,
               currency: 'usd',
               customer: customer.id,
