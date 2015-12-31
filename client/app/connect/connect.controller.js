@@ -6,6 +6,8 @@ angular.module('culturalystApp')
 
     $scope.register = function(){
       //TODO: Add bank acct Validation
+      //Add ability to update account
+      console.log($scope.country,$scope.route,$scope.acct)
       $http({
         method: 'GET',
         url: '/api/users/me'

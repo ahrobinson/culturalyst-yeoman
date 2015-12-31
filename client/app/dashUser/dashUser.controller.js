@@ -2,6 +2,7 @@
 
 angular.module('culturalystApp')
   .controller('DashUserCtrl', function ($scope, $log, $location, Auth, $http, $state) {
+    $state.go('dashUser.profile')
     $scope.me;
     $scope.rewards;
     $http.get('/api/users/me').then(function(res) {

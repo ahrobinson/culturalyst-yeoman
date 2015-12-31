@@ -398,6 +398,25 @@ exports.subscribe= function(req,res){
     });
 }
 
+exports.addCharge = function(charge,id){
+  User.find({
+      where: {
+        _id: id
+      }
+    })
+    .then(function(user) {
+      if(user.supporters === null){
+        user.supporters = 1;
+      } else {
+        user.supporters += 1
+      }
+      return user.save()
+        .then(function() {
+          res.status(204).end();
+        })
+        .catch(validationError(res));
+    });
+}
 //One time charge to customer
 exports.charge = function(req,res){
   var amount = req.body.amount
@@ -447,8 +466,8 @@ exports.charge = function(req,res){
             }).then(function(charge){
               console.log('charges: ', charge)
               //save charge to db for user/artist dashboard
-              res.status(204).end()
-            }).catch(handleError(err))
+              // exports.addCharge(charge,artistId)
+            }).catch(handleError(res))
 
           })
         }

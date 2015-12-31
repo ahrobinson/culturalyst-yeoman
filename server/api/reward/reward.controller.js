@@ -110,9 +110,12 @@ exports.create = function(req, res) {
 exports.newReward = function(req, res) {
   req.body.user_id = req.params.user_id;
   console.log(req.body)
-  exports.createPlan(req,res);
+  // exports.createPlan(req,res);
+
   Reward.create(req.body)
-    .then(responseWithResult(res, 201))
+    .then(function(reward){
+      console.log('rew: ', reward)
+    })
     .catch(handleError(res));
 }
 
@@ -151,17 +154,18 @@ exports.destroy = function(req, res) {
 exports.createPlan = function(req,res){
   console.log('creating plan!')
   var reward = req.body
+  reward.user_id = req.params.user_id;
   var plan = 'user' + reward.user_id + 'plan' + reward.amount
+
   stripe.plans.create({
     amount: reward.amount * 100,
     interval: 'month',
-    name: 'reward.title',
+    name: reward.title,
     currency: 'usd',
     id: plan,
-    statement_descriptor: 'Culturalyst Artist Support'
+    statement_descriptor: 'Culturalyst Artist'
   }).then(function(plan){
     console.log('plan: ', plan)
-    res.status(204).end();
   }).catch(handleError(res))
 }
 

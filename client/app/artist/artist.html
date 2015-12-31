@@ -24,7 +24,7 @@
       <i ng-if="artist.behance" class="fa fa-behance"></i>
     </div>
     <div class="actionButtons">
-      <button class="catalyzeBtn btn btn-default btn-md">Catalyze</button>
+      <a href="/payment/{{artistId}}" class="catalyzeBtn btn btn-default btn-md">Catalyze</a>
       <button class="followBtn btn btn-default btn-md">Follow</button>
     </div>
     </div>
@@ -58,7 +58,7 @@
     <div class="col-lg-3 text-center" style="width: 25%">
       <h3 class="text-center">Rewards</h3>
     </div>
-      <div ui-view></div> 
+      <div ui-view></div>
   </div>
 </div>
 
@@ -111,7 +111,7 @@
       		  </div>
             </div>
         </div>
-        </div> --> 
+        </div> -->
 
 <!--       <div class="earned col-md-offset-2 col-md-3 text-center">
           <div class="numCats">

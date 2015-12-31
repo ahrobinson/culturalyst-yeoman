@@ -46,7 +46,7 @@ module.exports = function(sequelize, DataTypes) {
     earned: DataTypes.STRING,
     budget: DataTypes.DECIMAL,
     supporters: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       default: 0
     },
     bio: DataTypes.TEXT,
