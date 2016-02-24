@@ -19,9 +19,9 @@ angular.module('culturalystApp')
     }, function(res){
       console.log(res)
       $location.path('/')
-    })
+    });
 
-    $scope.artist = {}
+    $scope.artist = {};
     // Payment
     var sendToken = function(token, args){
       console.log('args: ',args)
@@ -34,8 +34,8 @@ angular.module('culturalystApp')
           recurring: $scope.recurring,
           _id: $scope.artistId
         }
-      })
-    }
+      });
+    };
     // Configure Checkout
     var checkout = StripeCheckout.configure({
         key: 'pk_test_fN4bxAyEBsyBxrDWpaOD4sHk',
@@ -50,8 +50,8 @@ angular.module('culturalystApp')
       $scope.amountToPay = amount;
       checkout.open({
         amount: amount * 100
-      })
-    }
+      });
+    };
     // Rewards
     $scope.getRewards = function(){
       $http.get('api/rewards/myRewards/' + $scope.artistId).then(function(response){

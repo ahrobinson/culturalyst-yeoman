@@ -330,7 +330,7 @@ exports.authCallback = function(req, res, next) {
 };
 
 //Artist Acct Registration
-exports.registerdb = function(account, id){
+exports.registerdb = function(res, account, id){
   console.log('calling me')
   User.find({
       where: {
@@ -354,9 +354,8 @@ exports.register = function(req,res){
   data.tos_acceptance.ip = req.connection.remoteAddress;
   stripe.accounts.create(data)
     .then(function(acct){
-      exports.registerdb(acct, userId);
-    }).then(function() {
-      res.status(204).end();
+      console.log('acct: ', acct)
+      // exports.registerdb(res, acct, userId);
     })
 }
 
@@ -417,24 +416,24 @@ exports.subscribe= function(req,res){
 }
 
 //One time charge to customer
-exports.chargedb = function(charge,id){
-  console.log('calling me')
-  User.find({
-      where: {
-        _id: id
-      }
-    })
-    .then(function(user) {
-        console.log('supps: ',user.supporters)
-        user.supporters = 1;
-        user.save()
-          .then(function() {
-            console.log('done!')
-            res.status(204).end();
-          })
-          .catch(validationError(res));
-    });
-}
+// exports.chargedb = function(charge,id){
+//   console.log('calling me')
+//   User.find({
+//       where: {
+//         _id: id
+//       }
+//     })
+//     .then(function(user) {
+//         console.log('supps: ',user.supporters)
+//         user.supporters = 1;
+//         user.save()
+//           .then(function() {
+//             console.log('done!')
+//             res.status(204).end();
+//           })
+//           .catch(validationError(res));
+//     });
+// }
 
 exports.charge = function(req,res){
   var amount = req.body.amount
@@ -484,7 +483,7 @@ exports.charge = function(req,res){
               console.log('charges: ', charge)
               //save charge to db for user/artist dashboard
               res.status(204).end()
-              exports.chargedb(charge,artistId);
+              // exports.chargedb(charge,artistId);
             }).catch(handleError(res))
 
           })
