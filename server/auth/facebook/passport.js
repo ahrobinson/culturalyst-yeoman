@@ -2,7 +2,6 @@ import passport from 'passport';
 import {Strategy as FacebookStrategy} from 'passport-facebook';
 
 exports.setup = function(User, config) {
-  console.log('facebookbruhh: ', config.facebook)
   passport.use(new FacebookStrategy({
       clientID: config.facebook.clientID,
       clientSecret: config.facebook.clientSecret,

@@ -355,8 +355,20 @@ exports.register = function(req,res){
   stripe.accounts.create(data)
     .then(function(acct){
       console.log('acct: ', acct)
-      // exports.registerdb(res, acct, userId);
-    })
+      User.find({
+          where: {
+            _id: userId
+          }
+        })
+        .then(function(user) {
+            user.account = JSON.stringify(acct.id)
+            user.save()
+              .then(function() {
+                res.status(204).end();
+              })
+              .catch(validationError(res));
+        });
+    });
 }
 
 //Subscribe Customer to monthly payments
@@ -415,25 +427,25 @@ exports.subscribe= function(req,res){
     });
 }
 
-//One time charge to customer
-// exports.chargedb = function(charge,id){
-//   console.log('calling me')
-//   User.find({
-//       where: {
-//         _id: id
-//       }
-//     })
-//     .then(function(user) {
-//         console.log('supps: ',user.supporters)
-//         user.supporters = 1;
-//         user.save()
-//           .then(function() {
-//             console.log('done!')
-//             res.status(204).end();
-//           })
-//           .catch(validationError(res));
-//     });
-// }
+// One time charge to customer
+exports.chargedb = function(res, amount,id){
+  console.log('calling me')
+  User.find({
+      where: {
+        _id: id
+      }
+    })
+    .then(function(user) {
+        console.log('earned: ',user.earned)
+        user.earned = user.earned + (amount/100);
+        user.save()
+          .then(function() {
+            console.log('done!')
+            res.status(204).end();
+          })
+          .catch(validationError(res));
+    });
+}
 
 exports.charge = function(req,res){
   var amount = req.body.amount
@@ -482,8 +494,9 @@ exports.charge = function(req,res){
             }).then(function(charge){
               console.log('charges: ', charge)
               //save charge to db for user/artist dashboard
-              res.status(204).end()
-              // exports.chargedb(charge,artistId);
+              // res.status(204).end()
+              var total = charge.amount - fee;
+              exports.chargedb(res, total, artistId);
             }).catch(handleError(res))
 
           })
