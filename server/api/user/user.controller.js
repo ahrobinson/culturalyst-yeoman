@@ -330,23 +330,6 @@ exports.authCallback = function(req, res, next) {
 };
 
 //Artist Acct Registration
-exports.registerdb = function(res, account, id){
-  console.log('calling me')
-  User.find({
-      where: {
-        _id: id
-      }
-    })
-    .then(function(user) {
-        user.account = JSON.stringify(account.id)
-        user.save()
-          .then(function(res) {
-            res.status(204).end();
-          })
-          .catch(validationError(res));
-    });
-}
-
 exports.register = function(req,res){
   var userId = req.body._id
   var data = req.body.data
@@ -410,7 +393,7 @@ exports.subscribe= function(req,res){
             //create charge from cust id
             return stripe.customers.createSubscription(customer,
               {
-                plan: 'user' + artistID + 'plan' + amount/100,
+                plan: 'artist' + artistID + 'plan' + amount/100,
                 application_fee_percent: 10.4 + feePercent
               }
             ).then(function(subscription){
@@ -452,7 +435,7 @@ exports.charge = function(req,res){
   var artistId = req.body._id
   //for subscriptions
   var recurring = req.body.recurring
-  //find Artist by ID
+  //this takes out stripe fee and Culturalyst percentage
   var fee = amount * 0.104 + 30
 
   User.find({
@@ -484,20 +467,25 @@ exports.charge = function(req,res){
             source: req.body.token
           }).then(function(customer){
             console.log('customer: ',customer)
+            console.log('make customer bruh')
+            console.log('datastuffs: ',amount, customer.id, JSON.parse(user.dataValues.account), fee)
             //create charge from cust id
             stripe.charges.create({
               amount: amount,
               currency: 'usd',
               customer: customer.id,
               destination: JSON.parse(user.dataValues.account),
-              application_fee: fee
+              //throws invalid integer error if not rounded
+              application_fee: Math.round(fee)
             }).then(function(charge){
               console.log('charges: ', charge)
               //save charge to db for user/artist dashboard
               // res.status(204).end()
               var total = charge.amount - fee;
               exports.chargedb(res, total, artistId);
-            }).catch(handleError(res))
+            }).catch(function(err){
+              console.log('charge err: ', err)
+            })
 
           })
         }

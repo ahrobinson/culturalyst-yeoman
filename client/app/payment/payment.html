@@ -12,7 +12,7 @@
         <h4 class="card-title">No Reward</h4>
         <h4 class="card-title">Just keep working hard!</h4>
         <input type="text" ng-model="amount" ng-init="amount=1.00"/>
-        <a href="#" ng-click="submit(amount)" class="btn btn-primary" style="background-color: #9B30FF;">Catalyze</a>
+        <a href="#" ng-click="charge(amount)" class="btn btn-primary" style="background-color: #9B30FF;">Catalyze</a>
       </div>
     </div>
 ​
@@ -22,7 +22,7 @@
             <h4 class="card-title">${{reward.amount}}</h4>
             <h4 class="card-title">{{reward.title}}</h4>
             <p class="card-reward">{{reward.description}}</p>
-             <a href="#" ng-click="submit(reward.amount)" class="btn btn-primary" style="background-color: #9B30FF;">Choose this Reward</a>
+             <a href="#" ng-click="subscribe(reward.amount)" class="btn btn-primary" style="background-color: #9B30FF;">Choose this Reward</a>
           </div>
     </div>
 

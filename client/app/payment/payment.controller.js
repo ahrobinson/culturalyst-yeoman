@@ -24,17 +24,30 @@ angular.module('culturalystApp')
     $scope.artist = {};
     // Payment
     var sendToken = function(token, args){
-      console.log('args: ',args)
-      $http({
-        method: 'POST',
-        url: 'api/users/charge',
-        data: {
-          token: token.id,
-          amount: $scope.amountToPay * 100,
-          recurring: $scope.recurring,
-          _id: $scope.artistId
-        }
-      });
+      // if($scope.recurring){
+      //   $http({
+      //     method: 'POST',
+      //     url: 'api/users/subscribe',
+      //     data: {
+      //       token: token.id,
+      //       amount: $scope.amountToPay * 100,
+      //       recurring: $scope.recurring,
+      //       _id: $scope.artistId
+      //     }
+      //   });
+      // } else {
+        $http({
+          method: 'POST',
+          url: 'api/users/charge',
+          data: {
+            token: token.id,
+            amount: $scope.amountToPay * 100,
+            recurring: $scope.recurring,
+            _id: $scope.artistId
+          }
+        });
+      // }
+
     };
     // Configure Checkout
     var checkout = StripeCheckout.configure({
@@ -46,7 +59,16 @@ angular.module('culturalystApp')
         billingAddress: true,
     });
 
-    $scope.submit = function(amount){
+    $scope.charge = function(amount){
+      $scope.recurring = false;
+      $scope.amountToPay = amount;
+      checkout.open({
+        amount: amount * 100
+      });
+    };
+
+    $scope.subscribe = function(amount){
+      $scope.recurring = true;
       $scope.amountToPay = amount;
       checkout.open({
         amount: amount * 100
@@ -61,17 +83,5 @@ angular.module('culturalystApp')
       });
     };
     $scope.getRewards();
-    //MOCK REWARD DATA
-    $scope.rewards = [
-      {
-        amount: 30,
-        title: 'Help A Brotha Out',
-        description: 'You will really be helping a brotha out with this one.'
-      },
-      {
-        amount: 50,
-        title: 'Help A Brotha Out',
-        description: 'You will really be helping a brotha out with this one.'
-      }
-    ]
+
   });
